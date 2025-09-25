@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             BuildingSeeder::class,
             ActivitySeeder::class,
             OrganizationSeeder::class,
+            OrganizationActivitySeeder::class,
         ]);
     }
 }
