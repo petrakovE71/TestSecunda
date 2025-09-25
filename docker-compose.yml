@@ -1,0 +1,56 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: secunda-app
+    container_name: secunda-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - secunda-network
+    depends_on:
+      - db
+
+  nginx:
+    image: nginx:alpine
+    container_name: secunda-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx:/etc/nginx/conf.d
+    networks:
+      - secunda-network
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8.0
+    container_name: secunda-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-laravel}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-password}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-password}
+      MYSQL_USER: ${DB_USERNAME:-laravel}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - secunda-mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - secunda-network
+
+networks:
+  secunda-network:
+    driver: bridge
+
+volumes:
+  secunda-mysql:
+    driver: local
