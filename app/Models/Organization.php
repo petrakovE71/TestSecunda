@@ -20,6 +20,6 @@ class Organization extends Model
 
     public function activities()
     {
-        return $this->belongsToMany(Activity::class);
+        return $this->belongsToMany(Activity::class, 'organization_activity');
     }
 }
