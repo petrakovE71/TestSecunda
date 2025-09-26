@@ -10,7 +10,7 @@ use OpenApi\Annotations as OA;
  *     schema="Organization",
  *     required={"name", "building_id"},
  *     @OA\Property(property="id", type="integer", format="int64", example=1),
- *     @OA\Property(property="name", type="string", example="ООО Рога и Копыта"),
+ *     @OA\Property(property="name", type="string", example="ООО Продуктовый рай"),
  *     @OA\Property(property="building_id", type="integer", format="int64", example=1),
  *     @OA\Property(
  *         property="building",

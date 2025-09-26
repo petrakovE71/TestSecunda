@@ -16,140 +16,19 @@
         }
     ],
     "paths": {
-        "/api/buildings": {
+        "/api/organizations/{id}": {
             "get": {
                 "tags": [
-                    "Buildings"
+                    "Organizations"
                 ],
-                "summary": "Get all buildings",
-                "description": "Returns a list of all buildings with their related data",
-                "operationId": "getBuildings",
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/Building"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized - Invalid API key"
-                    }
-                },
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "Buildings"
-                ],
-                "summary": "Create a new building",
-                "description": "Creates a new building with the provided data",
-                "operationId": "storeBuilding",
-                "requestBody": {
-                    "description": "Building data",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "address",
-                                    "latitude",
-                                    "longitude"
-                                ],
-                                "properties": {
-                                    "address": {
-                                        "type": "string",
-                                        "example": "ул. Ленина, 1"
-                                    },
-                                    "latitude": {
-                                        "type": "number",
-                                        "format": "float",
-                                        "example": 55.7558
-                                    },
-                                    "longitude": {
-                                        "type": "number",
-                                        "format": "float",
-                                        "example": 37.6173
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Building created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Building"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The given data was invalid."
-                                        },
-                                        "errors": {
-                                            "properties": {
-                                                "address": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The address field is required."
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized - Invalid API key"
-                    }
-                },
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/buildings/{id}": {
-            "get": {
-                "tags": [
-                    "Buildings"
-                ],
-                "summary": "Get building by ID",
-                "description": "Returns a single building by ID with related data",
-                "operationId": "getBuildingById",
+                "summary": "Вывод информации об организации по её идентификатору",
+                "description": "Returns a single organization by ID with related data",
+                "operationId": "getOrganizationById",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID of building to return",
+                        "description": "ID of organization to return",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -163,13 +42,13 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Building"
+                                    "$ref": "#/components/schemas/Organization"
                                 }
                             }
                         }
                     },
                     "404": {
-                        "description": "Building not found"
+                        "description": "Organization not found"
                     },
                     "401": {
                         "description": "Unauthorized - Invalid API key"
@@ -187,7 +66,7 @@
                 "tags": [
                     "Organizations"
                 ],
-                "summary": "Get organizations by building ID",
+                "summary": "Список всех организаций находящихся в конкретном здании",
                 "description": "Returns a list of organizations in a specific building",
                 "operationId": "getOrganizationsByBuilding",
                 "parameters": [
@@ -235,7 +114,7 @@
                 "tags": [
                     "Organizations"
                 ],
-                "summary": "Get organizations by (тип деятельности) activity ID",
+                "summary": "Список всех организаций, которые относятся к указанному виду деятельности",
                 "description": "Returns a list of organizations with a specific activity",
                 "operationId": "getOrganizationsByActivity",
                 "parameters": [
@@ -266,6 +145,198 @@
                     },
                     "404": {
                         "description": "Activity not found"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid API key"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/organizations/search/location": {
+            "post": {
+                "tags": [
+                    "Organizations"
+                ],
+                "summary": "Search organizations by location",
+                "description": "список организаций, которые находятся в заданном радиусе/прямоугольной области относительно указанной точки на карте. список зданий",
+                "operationId": "searchOrganizationsByLocation",
+                "requestBody": {
+                    "description": "Search parameters",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "latitude",
+                                    "longitude"
+                                ],
+                                "properties": {
+                                    "latitude": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 55.7558
+                                    },
+                                    "longitude": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 37.6173
+                                    },
+                                    "radius": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 1.5
+                                    },
+                                    "min_lat": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 55.7
+                                    },
+                                    "max_lat": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 55.8
+                                    },
+                                    "min_lng": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 37.5
+                                    },
+                                    "max_lng": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 37.7
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Organization"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid API key"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/activities/{activityId}/organizations/recursive": {
+            "get": {
+                "tags": [
+                    "Organizations"
+                ],
+                "summary": "искать организации по виду деятельности. Например, поиск по виду деятельности «Еда», которая находится на первом уровне дерева, и чтобы нашлись все организации, которые относятся к видам деятельности, лежащим внутри. Т.е. в результатах поиска должны отобразиться организации с видом деятельности Еда, Мясная продукция, Молочная продукция.",
+                "description": "Returns a list of organizations with a specific activity or any of its child activities",
+                "operationId": "getOrganizationsByActivityRecursive",
+                "parameters": [
+                    {
+                        "name": "activityId",
+                        "in": "path",
+                        "description": "ID of activity to get organizations for",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Organization"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Activity not found"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid API key"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/organizations/search/name": {
+            "post": {
+                "tags": [
+                    "Organizations"
+                ],
+                "summary": "Поиск организации по названию",
+                "description": "Returns organizations matching the provided name",
+                "operationId": "searchOrganizationsByName",
+                "requestBody": {
+                    "description": "Search parameters",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Продукт"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Organization"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
                     },
                     "401": {
                         "description": "Unauthorized - Invalid API key"
@@ -367,7 +438,7 @@
                     },
                     "name": {
                         "type": "string",
-                        "example": "ООО Рога и Копыта"
+                        "example": "ООО Продуктовый рай"
                     },
                     "building_id": {
                         "type": "integer",
@@ -440,10 +511,6 @@
         }
     },
     "tags": [
-        {
-            "name": "Buildings",
-            "description": "API Endpoints for Buildings"
-        },
         {
             "name": "Organizations",
             "description": "API Endpoints for Organizations"
