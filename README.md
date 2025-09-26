@@ -88,3 +88,7 @@ To stop the Docker environment:
 ```
 docker-compose down
 ```
+
+## API Documentation
+
+This project includes Swagger UI for API documentation and testing. For detailed instructions on how to use the Swagger UI interface, please refer to the [Swagger Usage Guide](SWAGGER_USAGE_GUIDE.md).
