@@ -109,17 +109,6 @@ class ActivityController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        $activity = Activity::findOrFail($id);
-        $activity->delete();
-
-        return response()->json(null, 204);
-    }
-
-    /**
      * Get activities in a hierarchical structure.
      */
     public function tree()

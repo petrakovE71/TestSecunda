@@ -1,0 +1,452 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Organization Directory API",
+        "description": "API for managing organizations, buildings, and activities",
+        "contact": {
+            "name": "API Support",
+            "email": "admin@example.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/api/buildings": {
+            "get": {
+                "tags": [
+                    "Buildings"
+                ],
+                "summary": "Get all buildings",
+                "description": "Returns a list of all buildings with their related data",
+                "operationId": "getBuildings",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Building"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid API key"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Buildings"
+                ],
+                "summary": "Create a new building",
+                "description": "Creates a new building with the provided data",
+                "operationId": "storeBuilding",
+                "requestBody": {
+                    "description": "Building data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "address",
+                                    "latitude",
+                                    "longitude"
+                                ],
+                                "properties": {
+                                    "address": {
+                                        "type": "string",
+                                        "example": "ул. Ленина, 1"
+                                    },
+                                    "latitude": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 55.7558
+                                    },
+                                    "longitude": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 37.6173
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Building created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Building"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "address": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The address field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid API key"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/buildings/{id}": {
+            "get": {
+                "tags": [
+                    "Buildings"
+                ],
+                "summary": "Get building by ID",
+                "description": "Returns a single building by ID with related data",
+                "operationId": "getBuildingById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of building to return",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Building"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Building not found"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid API key"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/buildings/{buildingId}/organizations": {
+            "get": {
+                "tags": [
+                    "Organizations"
+                ],
+                "summary": "Get organizations by building ID",
+                "description": "Returns a list of organizations in a specific building",
+                "operationId": "getOrganizationsByBuilding",
+                "parameters": [
+                    {
+                        "name": "buildingId",
+                        "in": "path",
+                        "description": "ID of building to get organizations for",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Organization"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Building not found"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid API key"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/activities/{activityId}/organizations": {
+            "get": {
+                "tags": [
+                    "Organizations"
+                ],
+                "summary": "Get organizations by (тип деятельности) activity ID",
+                "description": "Returns a list of organizations with a specific activity",
+                "operationId": "getOrganizationsByActivity",
+                "parameters": [
+                    {
+                        "name": "activityId",
+                        "in": "path",
+                        "description": "ID of activity to get organizations for",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Organization"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Activity not found"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid API key"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Activity": {
+                "required": [
+                    "name",
+                    "level"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Еда"
+                    },
+                    "parent_id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": null,
+                        "nullable": true
+                    },
+                    "level": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Building": {
+                "required": [
+                    "address",
+                    "latitude",
+                    "longitude"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "address": {
+                        "type": "string",
+                        "example": "ул. Ленина, 1"
+                    },
+                    "latitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 55.7558
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 37.6173
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Organization": {
+                "required": [
+                    "name",
+                    "building_id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "ООО Рога и Копыта"
+                    },
+                    "building_id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "building": {
+                        "$ref": "#/components/schemas/Building"
+                    },
+                    "phone_numbers": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OrganizationPhone"
+                        }
+                    },
+                    "activities": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Activity"
+                        }
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "OrganizationPhone": {
+                "required": [
+                    "number"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "organization_id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "number": {
+                        "type": "string",
+                        "example": "+7 (999) 123-45-67"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "name": "X-API-KEY",
+                "in": "header"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Buildings",
+            "description": "API Endpoints for Buildings"
+        },
+        {
+            "name": "Organizations",
+            "description": "API Endpoints for Organizations"
+        }
+    ]
+}
