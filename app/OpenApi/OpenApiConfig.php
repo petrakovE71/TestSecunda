@@ -6,7 +6,7 @@ namespace App\OpenApi;
  * @OA\Info(
  *     title="Organization Directory API",
  *     version="1.0.0",
- *     description="API for managing organizations, buildings, and activities",
+ *     description="API for managing organizations and their relationships with buildings and activities",
  *     @OA\Contact(
  *         email="admin@example.com",
  *         name="API Support"
@@ -26,18 +26,18 @@ namespace App\OpenApi;
  * )
  *
  * @OA\Tag(
- *     name="Buildings",
- *     description="API Endpoints for Buildings"
- * )
- *
- * @OA\Tag(
  *     name="Organizations",
  *     description="API Endpoints for Organizations"
  * )
  *
  * @OA\Tag(
+ *     name="Buildings",
+ *     description="Organization endpoints related to buildings"
+ * )
+ *
+ * @OA\Tag(
  *     name="Activities",
- *     description="API Endpoints for Activities"
+ *     description="Organization endpoints related to activities"
  * )
  */
 class OpenApiConfig
@@ -46,61 +46,5 @@ class OpenApiConfig
 }
 
 /**
- * Schema definitions
- *
- * @OA\Schema(
- *     schema="Organization",
- *     required={"name", "building_id"},
- *     @OA\Property(property="id", type="integer", format="int64", example=1),
- *     @OA\Property(property="name", type="string", example="ООО Продуктовый рай"),
- *     @OA\Property(property="building_id", type="integer", format="int64", example=1),
- *     @OA\Property(
- *         property="building",
- *         ref="#/components/schemas/Building"
- *     ),
- *     @OA\Property(
- *         property="phone_numbers",
- *         type="array",
- *         @OA\Items(ref="#/components/schemas/OrganizationPhone")
- *     ),
- *     @OA\Property(
- *         property="activities",
- *         type="array",
- *         @OA\Items(ref="#/components/schemas/Activity")
- *     ),
- *     @OA\Property(property="created_at", type="string", format="date-time"),
- *     @OA\Property(property="updated_at", type="string", format="date-time")
- * )
- *
- * @OA\Schema(
- *     schema="Building",
- *     required={"address", "latitude", "longitude"},
- *     @OA\Property(property="id", type="integer", format="int64", example=1),
- *     @OA\Property(property="address", type="string", example="ул. Ленина, 1"),
- *     @OA\Property(property="latitude", type="number", format="float", example=55.7558),
- *     @OA\Property(property="longitude", type="number", format="float", example=37.6173),
- *     @OA\Property(property="created_at", type="string", format="date-time"),
- *     @OA\Property(property="updated_at", type="string", format="date-time")
- * )
- *
- * @OA\Schema(
- *     schema="OrganizationPhone",
- *     required={"number"},
- *     @OA\Property(property="id", type="integer", format="int64", example=1),
- *     @OA\Property(property="organization_id", type="integer", format="int64", example=1),
- *     @OA\Property(property="number", type="string", example="+7 (999) 123-45-67"),
- *     @OA\Property(property="created_at", type="string", format="date-time"),
- *     @OA\Property(property="updated_at", type="string", format="date-time")
- * )
- *
- * @OA\Schema(
- *     schema="Activity",
- *     required={"name", "level"},
- *     @OA\Property(property="id", type="integer", format="int64", example=1),
- *     @OA\Property(property="name", type="string", example="Еда"),
- *     @OA\Property(property="parent_id", type="integer", format="int64", nullable=true, example=null),
- *     @OA\Property(property="level", type="integer", example=1),
- *     @OA\Property(property="created_at", type="string", format="date-time"),
- *     @OA\Property(property="updated_at", type="string", format="date-time")
- * )
+ * Schema definitions are located in App\OpenApi\SchemaDefinitions.php
  */

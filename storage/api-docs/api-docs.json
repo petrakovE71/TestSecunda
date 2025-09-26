@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Organization Directory API",
-        "description": "API for managing organizations, buildings, and activities",
+        "description": "API for managing organizations and their relationships with buildings and activities",
         "contact": {
             "name": "API Support",
             "email": "admin@example.com"
@@ -162,7 +162,7 @@
                 "tags": [
                     "Organizations"
                 ],
-                "summary": "Search organizations by location",
+                "summary": "список организаций, которые находятся в заданном радиусе/прямоугольной области относительно указанной точки на карте. список зданий",
                 "description": "список организаций, которые находятся в заданном радиусе/прямоугольной области относительно указанной точки на карте. список зданий",
                 "operationId": "searchOrganizationsByLocation",
                 "requestBody": {

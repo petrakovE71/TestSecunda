@@ -256,17 +256,6 @@ class OrganizationController extends Controller
     }
 
     /**
-     * Helper method to get all child activity IDs recursively.
-     */
-    private function getChildActivityIds(Activity $activity, array &$ids)
-    {
-        foreach ($activity->children as $child) {
-            $ids[] = $child->id;
-            $this->getChildActivityIds($child, $ids);
-        }
-    }
-
-    /**
      * Search organizations by name.
      *
      * @OA\Post(
@@ -310,5 +299,17 @@ class OrganizationController extends Controller
             ->get();
 
         return response()->json($organizations);
+    }
+
+
+    /**
+     * Helper method to get all child activity IDs recursively.
+     */
+    private function getChildActivityIds(Activity $activity, array &$ids)
+    {
+        foreach ($activity->children as $child) {
+            $ids[] = $child->id;
+            $this->getChildActivityIds($child, $ids);
+        }
     }
 }
